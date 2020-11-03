@@ -5,7 +5,7 @@
     <recommend-view :recommends="recommends"></recommend-view>
     <feature-view />
     <tab-control :titles="titles" class="tab-control" @tabClick="tabClick" />
-    <goods-list :goods="goods[currentType].list" />
+    <goods-list :goods="showGoods" />
   </div>
 </template>
 
@@ -54,6 +54,12 @@ export default {
     this.getGoods("sell");
   },
 
+  computed:{
+    showGoods(){
+      return this.goods[this.currentType].list
+    }
+  },
+
   methods: {
     // 事件监听方法
     tabClick(index) {
@@ -80,7 +86,6 @@ export default {
     getGoods(type) {
       const page = this.goods[type].page + 1;
       getHomeGoods(type, page).then((res) => {
-        console.log(res);
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
       });
