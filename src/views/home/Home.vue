@@ -1,11 +1,13 @@
 <template>
-  <div id="home">
+  <div id="home" class="wrapper">
     <nav-bar class="home-nav"><div slot="center">购物车</div></nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <recommend-view :recommends="recommends"></recommend-view>
-    <feature-view />
-    <tab-control :titles="titles" class="tab-control" @tabClick="tabClick" />
-    <goods-list :goods="showGoods" />
+    <scroll class="content">
+      <home-swiper :banners="banners"></home-swiper>
+      <recommend-view :recommends="recommends"></recommend-view>
+      <feature-view />
+      <tab-control :titles="titles" class="tab-control" @tabClick="tabClick" />
+      <goods-list :goods="showGoods" />
+    </scroll>
   </div>
 </template>
 
@@ -17,6 +19,7 @@ import FeatureView from "./childComps/FeatureView";
 import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
+import Scroll from "components/common/scroll/Scroll";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
@@ -30,6 +33,7 @@ export default {
     NavBar,
     TabControl,
     GoodsList,
+    Scroll,
   },
   data() {
     return {
@@ -54,10 +58,10 @@ export default {
     this.getGoods("sell");
   },
 
-  computed:{
-    showGoods(){
-      return this.goods[this.currentType].list
-    }
+  computed: {
+    showGoods() {
+      return this.goods[this.currentType].list;
+    },
   },
 
   methods: {
@@ -97,6 +101,8 @@ export default {
 <style scoped>
 #home {
   padding-top: 44px;
+  height: 100vh;
+  position: relative;
 }
 .home-nav {
   background-color: var(--color-tint);
@@ -112,4 +118,18 @@ export default {
   top: 44px;
   z-index: 9;
 }
+.content {
+  /* height: 300px; */
+  overflow: hidden;
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+}
+/* .content {
+  height: calc(100%-93px);
+  overflow: hidden;
+  margin-top: 44px;
+} */
 </style>
