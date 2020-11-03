@@ -9,5 +9,13 @@ module.exports = {
                 'views': '@/views',
             }
         }
-    }
+    },
+    //关闭ESlint
+    lintOnSave: false,
+    devServer: {
+        overlay: {
+            warning: false,
+            errors: false
+        }
+    },
 }
