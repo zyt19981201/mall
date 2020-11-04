@@ -12,7 +12,7 @@
       <home-swiper :banners="banners"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view />
-      <tab-control :titles="titles" class="tab-control" @tabClick="tabClick" />
+      <tab-control :titles="titles" @tabClick="tabClick" ref="tabControl" />
       <goods-list :goods="showGoods" />
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop" />
@@ -58,6 +58,7 @@ export default {
       },
       currentType: "pop",
       isShowBackTop: false,
+      tabOffsetTop: 0,
     };
   },
 
@@ -70,6 +71,7 @@ export default {
     this.getGoods("sell");
   },
   mounted() {
+    // 1.图片加载完成的事件监听
     const refresh = debounce(this.$refs.scroll.refresh, 50);
 
     // this.debounce(this.$refs.scroll.refresh, 500);
@@ -78,6 +80,10 @@ export default {
       // console.log(this.$refs.scroll.refresh);
       refresh();
     });
+
+    // 2.获取tabControl的offsetTop
+    console.log(this.$refs.tabControl.$el.offsetTop);
+    this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
   },
 
   computed: {
@@ -148,11 +154,11 @@ export default {
   top: 0;
   z-index: 1;
 }
-.tab-control {
+/* .tab-control {
   position: sticky;
   top: 44px;
   z-index: 9;
-}
+} */
 .content {
   /* height: 300px; */
   overflow: hidden;
