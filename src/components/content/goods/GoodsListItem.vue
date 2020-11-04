@@ -1,7 +1,7 @@
 <template>
   <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="" />
-    <div class="goods-info ">
+    <img :src="goodsItem.show.img" alt="" @load="imageLoad" />
+    <div class="goods-info">
       <p>{{ goodsItem.title }}</p>
       <span class="price">{{ goodsItem.price }}</span>
       <span class="collect">{{ goodsItem.cfav }}</span>
@@ -20,14 +20,20 @@ export default {
       },
     },
   },
+  methods: {
+    imageLoad() {
+      // console.log("imageLoad");
+      this.$bus.$emit("itemImageLoad");
+    },
+  },
 };
 </script>
 
 <style scoped>
 .goods-item {
   padding-bottom: 40px;
-  position:relative;
-  width:48%;
+  position: relative;
+  width: 48%;
 }
 
 .goods-item img {
