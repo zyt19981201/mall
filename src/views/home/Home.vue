@@ -1,13 +1,14 @@
 <template>
   <div id="home" class="wrapper">
     <nav-bar class="home-nav"><div slot="center">购物车</div></nav-bar>
-    <scroll class="content">
+    <scroll class="content" ref="scroll">
       <home-swiper :banners="banners"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view />
       <tab-control :titles="titles" class="tab-control" @tabClick="tabClick" />
       <goods-list :goods="showGoods" />
     </scroll>
+    <back-top @click.native="backClick" />
   </div>
 </template>
 
@@ -20,6 +21,7 @@ import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
+import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
@@ -34,6 +36,7 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
+    BackTop,
   },
   data() {
     return {
@@ -78,6 +81,11 @@ export default {
           this.currentType = "sell";
           break;
       }
+    },
+
+    // 组件监听
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0);
     },
 
     // 网络请求方法
