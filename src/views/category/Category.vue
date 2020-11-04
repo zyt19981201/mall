@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" ref="aaa">
+  <div class="wrapper" ref="aaa" :probe-type="3">
     <ul class="content">
       <li>{列表1}</li>
       <li>{列表2}</li>

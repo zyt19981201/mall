@@ -1,14 +1,14 @@
 <template>
   <div id="home" class="wrapper">
     <nav-bar class="home-nav"><div slot="center">购物车</div></nav-bar>
-    <scroll class="content" ref="scroll">
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contenScroll">
       <home-swiper :banners="banners"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view />
       <tab-control :titles="titles" class="tab-control" @tabClick="tabClick" />
       <goods-list :goods="showGoods" />
     </scroll>
-    <back-top @click.native="backClick" />
+    <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -49,6 +49,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
+      isShowBackTop: false,
     };
   },
 
@@ -81,6 +82,9 @@ export default {
           this.currentType = "sell";
           break;
       }
+    },
+    contenScroll(position) {
+      this.isShowBackTop = -position.y > 1000;
     },
 
     // 组件监听
