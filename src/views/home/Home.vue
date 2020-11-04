@@ -95,6 +95,7 @@ export default {
     },
     loadMore() {
       this.getGoods(this.currentType);
+      this.$refs.scroll.scroll.refresh();
     },
 
     // 组件监听
