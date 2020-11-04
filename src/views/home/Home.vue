@@ -1,7 +1,14 @@
 <template>
   <div id="home" class="wrapper">
     <nav-bar class="home-nav"><div slot="center">购物车</div></nav-bar>
-    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contenScroll">
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      :pull-up-load="true"
+      @scroll="contenScroll"
+      @pullingUp="loadMore"
+    >
       <home-swiper :banners="banners"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view />
@@ -86,6 +93,9 @@ export default {
     contenScroll(position) {
       this.isShowBackTop = -position.y > 1000;
     },
+    loadMore() {
+      this.getGoods(this.currentType);
+    },
 
     // 组件监听
     backClick() {
@@ -104,6 +114,7 @@ export default {
       getHomeGoods(type, page).then((res) => {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
+        this.$refs.scroll.finishPullUp();
       });
     },
   },

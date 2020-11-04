@@ -16,6 +16,10 @@ export default {
       type: Number,
       default: 0,
     },
+    pullUpLoad: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -28,15 +32,23 @@ export default {
       click: true,
       // probeType: 3,
       probeType: this.probeType,
+      pullUpLoad: this.pullUpLoad,
     });
     // 2.监听滚动位置
     this.scroll.on("scroll", (position) => {
       this.$emit("scroll", position);
     });
+    // 3.监听上拉事件
+    this.scroll.on("pullingUp", () => {
+      this.$emit("pullingUp");
+    });
   },
   methods: {
     scrollTo(x, y, time = 500) {
       this.scroll.scrollTo(x, y, time);
+    },
+    finishPullUp() {
+      this.scroll.finishPullUp();
     },
   },
 };
