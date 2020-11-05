@@ -4,8 +4,8 @@
     <tab-control
       :titles="titles"
       @tabClick="tabClick"
-      ref="tabControl"
-      class="tab-control1"
+      ref="tabControl1"
+      class="tab-control"
       v-show="isTabFixed"
     />
     <scroll
@@ -110,8 +110,8 @@ export default {
           this.currentType = "sell";
           break;
       }
-      this.$refs.tabControl1.currentType = index;
-      this.$refs.tabControl2.currentType = index;
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     contenScroll(position) {
       // 1.判断返回顶部是否显示
