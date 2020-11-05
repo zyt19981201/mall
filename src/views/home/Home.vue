@@ -1,6 +1,13 @@
 <template>
   <div id="home" class="wrapper">
     <nav-bar class="home-nav"><div slot="center">购物车</div></nav-bar>
+    <tab-control
+      :titles="titles"
+      @tabClick="tabClick"
+      ref="tabControl"
+      class="tab-control1"
+      v-show="isTabFixed"
+    />
     <scroll
       class="content"
       ref="scroll"
@@ -9,10 +16,10 @@
       @scroll="contenScroll"
       @pullingUp="loadMore"
     >
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view />
-      <tab-control :titles="titles" @tabClick="tabClick" ref="tabControl" />
+      <tab-control :titles="titles" @tabClick="tabClick" ref="tabControl2" />
       <goods-list :goods="showGoods" />
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop" />
@@ -59,6 +66,7 @@ export default {
       currentType: "pop",
       isShowBackTop: false,
       tabOffsetTop: 0,
+      isTabFixed: false,
     };
   },
 
@@ -80,10 +88,6 @@ export default {
       // console.log(this.$refs.scroll.refresh);
       refresh();
     });
-
-    // 2.获取tabControl的offsetTop
-    console.log(this.$refs.tabControl.$el.offsetTop);
-    this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
   },
 
   computed: {
@@ -106,13 +110,21 @@ export default {
           this.currentType = "sell";
           break;
       }
+      this.$refs.tabControl1.currentType = index;
+      this.$refs.tabControl2.currentType = index;
     },
     contenScroll(position) {
+      // 1.判断返回顶部是否显示
       this.isShowBackTop = -position.y > 1000;
+      // 2.判断是否吸顶
+      this.isTabFixed = -position.y > this.tabOffsetTop;
     },
     loadMore() {
       this.getGoods(this.currentType);
       this.$refs.scroll.scroll.refresh();
+    },
+    swiperImageLoad() {
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
     },
 
     // 组件监听
@@ -141,18 +153,19 @@ export default {
 
 <style scoped>
 #home {
-  padding-top: 44px;
+  /* padding-top: 44px; */
   height: 100vh;
   position: relative;
 }
 .home-nav {
   background-color: var(--color-tint);
   color: white;
-  position: fixed;
+
+  /* position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 1;
+  z-index: 9; */
 }
 /* .tab-control {
   position: sticky;
@@ -168,6 +181,16 @@ export default {
   left: 0;
   right: 0;
 }
+.tab-control {
+  position: relative;
+  z-index: 9;
+}
+/* .fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 44px;
+} */
 /* .content {
   height: calc(100%-93px);
   overflow: hidden;
