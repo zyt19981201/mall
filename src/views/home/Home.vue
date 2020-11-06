@@ -93,6 +93,7 @@ export default {
   activated() {
     this.$refs.scroll.scrollTo(0, this.saveY, 0);
     this.$refs.scroll.refresh();
+    // console.log("我回来啦");
   },
   deactivated() {
     this.saveY = this.$refs.scroll.getScrollY();
