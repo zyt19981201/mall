@@ -7,6 +7,8 @@
       <detail-shop-info :shop="shop" />
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" />
       <detail-params-info :param-info="paramInfo" />
+      <detail-comment-info :comment-info="commentInfo" />
+      <goods-list :goods="recommends" />
     </scroll>
   </div>
 </template>
@@ -18,10 +20,21 @@ import DetailBaseInfo from "./childComps/DetailBaseInfo";
 import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamsInfo from "./childComps/DetailParamsInfo";
+import DetailCommentInfo from "./childComps/DetailCommentInfo";
 
 import Scroll from "components/common/scroll/Scroll";
+import GoodsList from "components/content/goods/GoodsList";
 
-import { getDetail, Goods, Shop, GoodsParams } from "../../network/detail";
+import { debounce } from "common/utils";
+import { itemListenerMixin } from "common/mixin";
+
+import {
+  getDetail,
+  Goods,
+  Shop,
+  GoodsParams,
+  getRecommend,
+} from "network/detail";
 
 export default {
   name: "Detail",
@@ -32,9 +45,12 @@ export default {
     DetailShopInfo,
     DetailGoodsInfo,
     DetailParamsInfo,
+    DetailCommentInfo,
 
     Scroll,
+    GoodsList,
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       iid: null,
@@ -43,6 +59,9 @@ export default {
       shop: {},
       detailInfo: {},
       paramInfo: {},
+      commentInfo: {},
+      recommends: [],
+      // itemImgListener: null,
     };
   },
   created() {
@@ -76,7 +95,21 @@ export default {
         data.itemParams.info,
         data.itemParams.rule
       );
+
+      // 7.获取评论信息
+      if (data.rate.cRate !== 0) {
+        this.commentInfo = data.rate.list[0];
+      }
     });
+
+    // 3.请求推荐数据
+    getRecommend().then((res) => {
+      this.recommends = res.data.list;
+    });
+  },
+  mounted() {},
+  destroyed() {
+    this.$bus.$off("itemImageLoad", this.itemImgListener);
   },
   methods: {
     imageLoad() {
