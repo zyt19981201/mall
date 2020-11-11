@@ -19,6 +19,8 @@
       <detail-comment-info :comment-info="commentInfo" ref="comment" />
       <goods-list :goods="recommends" ref="recommend" />
     </scroll>
+    <detail-bottom-bar @addCart="addToCart" />
+    <back-top @click.native="backClick" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -30,12 +32,13 @@ import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamsInfo from "./childComps/DetailParamsInfo";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
+import DetailBottomBar from "./childComps/DetailBottomBar";
 
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
 
 import { debounce } from "common/utils";
-import { itemListenerMixin } from "common/mixin";
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 
 import {
   getDetail,
@@ -55,11 +58,12 @@ export default {
     DetailGoodsInfo,
     DetailParamsInfo,
     DetailCommentInfo,
+    DetailBottomBar,
 
     Scroll,
     GoodsList,
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       iid: null,
@@ -163,6 +167,7 @@ export default {
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 300);
     },
     contentScroll(position) {
+      this.listenShowBackTop(position);
       // console.log(position);
       const positionY = -position.y;
       let length = this.themeTopYs.length;
@@ -184,10 +189,22 @@ export default {
           positionY < this.themeTopYs[i + 1]
         ) {
           this.currentIndex = i;
-          console.log(this.currentIndex);
+          // console.log(this.currentIndex);
           this.$refs.detailNav.currentIndex = this.currentIndex;
         }
       }
+    },
+    addToCart() {
+      // 1.获取购物车需要展示的信息
+      const product = {};
+      product.iid = this.iid;
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      // console.log(product);
+      // 2.将商品添加到购物车
+      this.$store.commit("addCart", product);
     },
   },
 };
@@ -201,7 +218,7 @@ export default {
   height: 100vh;
 }
 .content {
-  height: calc(100% - 44px);
+  height: calc(100% - 93px);
 }
 .detail-nav {
   position: relative;

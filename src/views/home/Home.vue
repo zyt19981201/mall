@@ -39,7 +39,7 @@ import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "common/utils";
-import { itemListenerMixin } from "common/mixin";
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 
 export default {
   name: "Home",
@@ -54,7 +54,7 @@ export default {
     Scroll,
     BackTop,
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       banners: [],
@@ -66,7 +66,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isShowBackTop: false,
+      // isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0,
@@ -130,10 +130,11 @@ export default {
     },
     contenScroll(position) {
       // 1.判断返回顶部是否显示
-      this.isShowBackTop = -position.y > 1000;
+      this.listenShowBackTop(position);
       // 2.判断是否吸顶
       this.isTabFixed = -position.y > this.tabOffsetTop;
     },
+
     loadMore() {
       this.getGoods(this.currentType);
       this.$refs.scroll.scroll.refresh();
@@ -143,9 +144,9 @@ export default {
     },
 
     // 组件监听
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
-    },
+    // backClick() {
+    //   this.$refs.scroll.scrollTo(0, 0);
+    // },
 
     // 网络请求方法
     getMultidata() {
