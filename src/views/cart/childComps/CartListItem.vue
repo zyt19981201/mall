@@ -19,6 +19,7 @@
 
 <script>
 import CheckButton from "components/content/checkButton/CheckButton";
+import { mapGetters } from "vuex";
 
 export default {
   name: "CartListItem",
@@ -35,7 +36,7 @@ export default {
   },
   methods: {
     checkClick() {
-      this.itemInfo.checked = !this.itemInfo.checked
+      this.itemInfo.checked = !this.itemInfo.checked;
     },
   },
 };

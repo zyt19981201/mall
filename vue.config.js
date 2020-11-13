@@ -10,6 +10,7 @@ module.exports = {
             }
         }
     },
+    runtimeCompiler: true,
     //关闭ESlint
     lintOnSave: false,
     devServer: {
